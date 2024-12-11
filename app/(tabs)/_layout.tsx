@@ -4,7 +4,7 @@ import { TabBar } from '@/components/TabBar'
 
 const TabLayout = () => {
   return (
-    <Tabs tabBar={(props) => <TabBar {...props} />}screenOptions={headerShown: false}>
+    <Tabs tabBar={(props) => <TabBar {...props} />}screenOptions={{headerShown: false}}>
       <Tabs.Screen
         name="index"
         options={{
