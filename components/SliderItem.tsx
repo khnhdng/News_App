@@ -13,6 +13,7 @@ const SliderItem = ({slideItem, index}: Props) => {
   return (
     <View style={styles.itemWrapper}>
       <Image source={{uri: slideItem.image_url}} style={styles.image}/>
+      <Text>{slideItem.title}</Text>
     </View>
   )
 }

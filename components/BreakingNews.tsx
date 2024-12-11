@@ -2,6 +2,7 @@ import { FlatList, StyleSheet, View, Text } from 'react-native'
 import React from 'react'
 import { Colors } from '@/constants/Colors'
 import { NewsDataType} from '@/types'
+import SliderItem from '@/components/SliderItem'
 
 type Props = {
   newsList: Array<NewsDataType>
@@ -11,10 +12,15 @@ const BreakingNews = ({newsList}: Props) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Breaking News</Text>
-      <View style={styles.slideWrapper}></View>
-        <FlatList data={newsList} keyExtractor={(_, index) => `list_item${index}`} renderItem={({item, index}) => (
-          <SliderItem />
-        )}/>
+      <View style={styles.slideWrapper}>
+        <FlatList 
+            data={newsList} 
+            keyExtractor={(_, index) => `list_item${index}`} 
+            renderItem={({item, index}) => (
+              <SliderItem slideItem={item} index={index}/>
+            )}
+          />
+      </View>
     </View>
   )
 }
