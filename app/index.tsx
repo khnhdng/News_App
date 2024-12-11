@@ -1,14 +1,23 @@
-import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { 
+  ImageBackground, 
+  StyleSheet, 
+  Text, 
+  TouchableOpacity, 
+  View
+} from "react-native";
 import React from "react";
 import { useRouter } from "expo-router";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import Animated, { FadeInDown, FadeInRight } from "react-native-reanimated"
-import { blue } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
+import { StatusBar } from "expo-status-bar"
+
 const Page = () => {
   const router = useRouter();
 
   return (
-    <View style={styles.container}>
+
+      <View style={styles.container}>
+      <StatusBar style="light"/>
       <ImageBackground 
         source={require("../assets/images/getting-started.jpg")} 
         style = {{ width: "100%", height: "100%"}} 
@@ -26,6 +35,8 @@ const Page = () => {
       </View>
       </ImageBackground>
     </View>
+
+    
   );
 };
 
