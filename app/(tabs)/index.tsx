@@ -10,7 +10,7 @@ import NewsList from '@/components/NewsList'
 import { ScrollView } from 'react-native-gesture-handler'
 import Categories from '@/components/Categories'
 import Loading from '@/components/Loading'
-
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 type Props = {}
 
@@ -64,6 +64,7 @@ const Page = (props: Props) => {
   }
 
   return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
     <ScrollView style={[styles.container, {paddingTop: safeTop}]}>
       <Header />
       <SearchBar/>
@@ -75,6 +76,7 @@ const Page = (props: Props) => {
       <Categories onCategoryChanged = {onCatChanged} />
       <NewsList newsList={news} />
     </ScrollView >
+</GestureHandlerRootView>
   );
 }
 
