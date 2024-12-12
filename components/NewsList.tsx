@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Image, Text, View } from 'react-native'
 import React from 'react'
 import { NewsDataType } from '@/types'
 import { Colors } from '@/constants/Colors'
