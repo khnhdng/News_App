@@ -1,7 +1,7 @@
 import { Dimensions, Image, StyleSheet, View, Text } from 'react-native'
 import React from 'react'
 import { NewsDataType } from '@/types'
-import { Extrapolation, interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated'
+import Animated, { Extrapolation, interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Colors } from "@/constants/Colors"
 
@@ -37,7 +37,7 @@ const SliderItem = ({slideItem, index, scrollX}: Props) => {
 });
 
   return (
-    <Animated.View 
+    <Animated.View
       style={[styles.itemWrapper, rnStyle]} 
       key={slideItem.article_id}>
       <Image source={{uri: slideItem.image_url}} style={styles.image}/>
