@@ -67,7 +67,7 @@ const Page = (props: Props) => {
     <GestureHandlerRootView style={{ flex: 1 }}>
     <ScrollView style={[styles.container, {paddingTop: safeTop}]}>
       <Header />
-      <SearchBar/>
+      <SearchBar withHorizontalPadding={true}/>
       {isLoading ? (
         <Loading size={'large'}/>
       ) : (
