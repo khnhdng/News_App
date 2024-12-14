@@ -36,8 +36,8 @@ const NewsList = ({newsList}:Props) => {
                 </View>
             </View>
         </View>
-        <TouchableOpacity/>
-        <Link/>
+        </TouchableOpacity>
+        </Link>
       ))
     )}
     </View>
