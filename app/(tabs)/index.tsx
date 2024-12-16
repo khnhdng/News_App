@@ -1,4 +1,4 @@
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, Text, View, TouchableOpacity} from 'react-native'
 import React, {useEffect, useState} from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Header from '@/components/Header'
@@ -11,6 +11,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import Categories from '@/components/Categories'
 import Loading from '@/components/Loading'
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
 
 type Props = {}
 
@@ -26,10 +27,9 @@ const Page = (props: Props) => {
   }, []);
   const getBreakingNews = async() => {
     try {
-      const URL = `https://newsdata.io/api/1/news?apikey=${process.env.EXPO_PUBLIC_API_KEY}&q=news&country=vi&language=vi&image=1&removeduplicate=1&size=5`
+      const URL = `https://newsdata.io/api/1/news?apikey=${process.env.EXPO_PUBLIC_API_KEY}&language=en&image=1&removeduplicate=1&size=5`
       const response = await axios .get(URL);
 
-      // console.log(response.data);
       if (response && response.data) {
         setBreakingNews(response.data.results);
         setISLoading(false);
@@ -45,10 +45,9 @@ const Page = (props: Props) => {
         categoryString = `&category=${category}`
       }
 
-      const URL = `https://newsdata.io/api/1/news?apikey=${process.env.EXPO_PUBLIC_API_KEY}&q=news&language=vi&image=1&removeduplicate=1&size=10${categoryString}`
+      const URL = `https://newsdata.io/api/1/news?apikey=${process.env.EXPO_PUBLIC_API_KEY}&language=en&image=1&removeduplicate=1&size=10${categoryString}`
       const response = await axios .get(URL);
 
-      // console.log(response.data);
       if (response && response.data) {
         setBreakingNews(response.data.results);
         setISLoading(false);
@@ -89,4 +88,3 @@ const styles = StyleSheet.create({
   },
 })
 
-//43:10

@@ -11,6 +11,7 @@ import { Colors } from "react-native/Libraries/NewAppScreen";
 import Animated, { FadeInDown, FadeInRight } from "react-native-reanimated"
 import { StatusBar } from "expo-status-bar"
 
+
 const Page = () => {
   const router = useRouter();
 

@@ -5,9 +5,10 @@ import { Colors } from 'react-native/Libraries/NewAppScreen'
 
 type Props = {
     withHorizontalPadding:boolean
+    setSearchQuery: Function
 }
 
-const SearchBar = ({withHorizontalPadding}: Props) => {
+const SearchBar = ({withHorizontalPadding, setSearchQuery}: Props) => {
   return (
     <View style={[styles.container, withHorizontalPadding && {paddingHorizontal: 20}]}>
         <View style={styles.searchBar}>
@@ -17,6 +18,7 @@ const SearchBar = ({withHorizontalPadding}: Props) => {
                 placeholderTextColor={Colors.lightGrey}
                 style = {styles.searchTxt}
                 autoCapitalize='none'
+                onChangeText={query => setSearchQuery(query)}
             />
         </View>
     </View>

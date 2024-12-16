@@ -99,7 +99,6 @@ const BreakingNews = ({newsList}: Props) => {
             setIsAutoPlay(true);
           }}
         />
-        
         <Pagination items={newsList} scrollX={scrollX} paginationIndex={paginationIndex}/>
       </View>
     </View>
