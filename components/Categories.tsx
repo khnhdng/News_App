@@ -34,7 +34,7 @@ const Categories = ({onCategoryChanged}: Props) => {
       >
         {newsCategoryList.map((item, index)=>(
             <TouchableOpacity 
-                ref={(el) => itemRef.current[index]=el} 
+                ref={(el) => itemRef.current[index] = el} 
                 key={index} 
                 style={[styles.item, activeIndex === index && styles.itemActive]}
                 onPress={() => handleSelectCategory(index)}
