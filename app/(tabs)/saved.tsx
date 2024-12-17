@@ -6,11 +6,12 @@ import { Link, Stack } from 'expo-router';
 import Loading from '@/components/Loading';
 import { NewsItem } from '@/components/NewsList';
 import { useIsFocused } from '@react-navigation/native';
+import { NewsDataType } from '@/types';
 
 type Props = {}
 
 const Page = (props: Props) => {
-  const [bookmarkNews, setBookmarkNews] = useState([]);
+  const [bookmarkNews, setBookmarkNews] = useState<NewsDataType[]> ([]);
   const [isLoading, setIsLoading] = useState(true);
   const isFocused = useIsFocused();
   useEffect(() => {
@@ -20,15 +21,15 @@ const Page = (props: Props) => {
   const fetchBookmark = async() => {
     await AsyncStorage.getItem('bookmark').then(async(token) => {
       const res = JSON.parse(token);
-      setIsLoading(true);
-      if(res) {
+      // setIsLoading(true);
+      if(res ) {
         console.log('Bookmark res: ', res);
         let query_string = res.join(',');
         console.log('Query string: ', query_string);
 
         const response = await axios.get(`https://newsdata.io/api/1/news?apikey=${process.env.EXPO_PUBLIC_API_KEY}&id=${query_string}`);
         setBookmarkNews(response.data.results);
-        isLoading(false);
+        setIsLoading(false);
       } else {
         setBookmarkNews([]);
         setIsLoading(false);
@@ -45,7 +46,10 @@ const Page = (props: Props) => {
         {isLoading ? (
           <Loading size={'large'} />
         ) : (
-          <FlatList data={bookmarkNews} keyExtractor={(_, index) => `list_item${index}`} showsHorizontalScrollIndicator={false} renderItem={({index, item})=>{
+          <FlatList 
+            data={bookmarkNews} 
+            keyExtractor={(_, index) => `list_item${index}`} showsHorizontalScrollIndicator={false} 
+            renderItem={({index, item})=>{
             return <Link href={`/news/${item.article_id}`} asChild key={index}>
                       <TouchableOpacity>
                         <NewsItem item={item} />

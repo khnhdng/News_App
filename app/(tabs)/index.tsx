@@ -1,4 +1,4 @@
-import { ActivityIndicator, StyleSheet, Text, View, TouchableOpacity} from 'react-native'
+import { ActivityIndicator, StyleSheet, Text, View, TouchableOpacity, ScrollView} from 'react-native'
 import React, {useEffect, useState} from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Header from '@/components/Header'
@@ -7,7 +7,7 @@ import BreakingNews from '@/components/BreakingNews'
 import axios from 'axios'
 import { NewsDataType } from '@/types'
 import NewsList from '@/components/NewsList'
-import { ScrollView } from 'react-native-gesture-handler'
+// import {  } from 'react-native-gesture-handler'
 import Categories from '@/components/Categories'
 import Loading from '@/components/Loading'
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -27,7 +27,7 @@ const Page = (props: Props) => {
   }, []);
   const getBreakingNews = async() => {
     try {
-      const URL = `https://newsdata.io/api/1/news?apikey=${process.env.EXPO_PUBLIC_API_KEY}&language=en&image=1&removeduplicate=1&size=5`
+      const URL = `https://newsdata.io/api/1/news?apikey=${process.env.EXPO_PUBLIC_API_KEY}&country=in&language=en&image=1&removeduplicate=1&size=5`
       const response = await axios .get(URL);
 
       if (response && response.data) {
@@ -66,7 +66,7 @@ const Page = (props: Props) => {
     <GestureHandlerRootView style={{ flex: 1 }}>
     <ScrollView style={[styles.container, {paddingTop: safeTop}]}>
       <Header />
-      <SearchBar withHorizontalPadding={true}/>
+      <SearchBar withHorizontalPadding={true} setSearchQuery={()=>{}}/>
       {isLoading ? (
         <Loading size={'large'}/>
       ) : (
@@ -87,4 +87,3 @@ const styles = StyleSheet.create({
     
   },
 })
-

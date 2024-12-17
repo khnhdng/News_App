@@ -68,7 +68,8 @@ const Page= (props: Props) => {
             {isLoading ? (
                 <Loading size = {'large'}/>
             ):(
-                <FlatList data={news} keyExtractor={(_, index) => `list_item${index}`} showsHorizontalScrollIndicator={false} renderItem={({index, item})=>{
+                <FlatList data={news} keyExtractor={(_, index) => `list_item${index}`} showsHorizontalScrollIndicator={false} 
+                renderItem={({index, item})=>{
                     return <Link href={`/news/${item.article_id}`} asChild key={index}>
                               <TouchableOpacity>
                                 <NewsItem item={item} />

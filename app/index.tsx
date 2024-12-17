@@ -10,13 +10,14 @@ import { useRouter } from "expo-router";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import Animated, { FadeInDown, FadeInRight } from "react-native-reanimated"
 import { StatusBar } from "expo-status-bar"
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 
 const Page = () => {
   const router = useRouter();
 
   return (
-
+<GestureHandlerRootView style={{ flex: 1 }}>
       <View style={styles.container}>
       <StatusBar style="light"/>
       <ImageBackground 
@@ -36,8 +37,7 @@ const Page = () => {
       </View>
       </ImageBackground>
     </View>
-
-    
+    </GestureHandlerRootView>
   );
 };
 

@@ -2,7 +2,8 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { NewsDataType } from '@/types'
 import Animated, { SharedValue } from 'react-native-reanimated'
-import { Colors } from 'react-native/Libraries/NewAppScreen'
+import { Colors } from '@/constants/Colors'
+
 
 type Props = {
     items: NewsDataType[],
@@ -16,7 +17,10 @@ const Pagination = ({items, paginationIndex, scrollX}: Props) => {
         {items.map((_, index) => {
             return(
                 //dấu 3 chấm
-                <Animated.View style={[styles.dot, {backgroundColor: paginationIndex === index ? Colors.tint : Colors.darkGrey
+                <Animated.View 
+                    style={[
+                        styles.dot, 
+                        {backgroundColor: paginationIndex === index ? Colors.tint : Colors.darkGrey
                 },
                 ]} 
                 key={index}/>

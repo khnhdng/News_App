@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View, Image } from 'react-native'
+import { ScrollView, TouchableOpacity, StyleSheet, Text, View, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { router, Stack, useLocalSearchParams } from 'expo-router'
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Ionicons } from '@expo/vector-icons'
 import axios from 'axios'
 import { NewsDataType } from '@/types'
@@ -22,8 +22,9 @@ const NewsDetails = (props: Props) => {
     }, []);
 
     useEffect(() => {
+      // if (!isLoading && news.length > 0)
       if (!isLoading) {
-        renderBookmark(new[0].article_id);
+        renderBookmark(news[0].article_id);
       }
     }, [isLoading]);
     const getNews = async() => {
@@ -61,6 +62,25 @@ const NewsDetails = (props: Props) => {
       })
     }
 
+    //Bản chát
+    // const saveBookmark = async (newsId: string) => {
+    //   setBookmark(true);
+    //   const token = await AsyncStorage.getItem("bookmark");
+    //   const res = token ? JSON.parse(token) : []; // Xử lý token là null
+    
+    //   if (Array.isArray(res)) {
+    //     let data = res.find((value: string) => value === newsId);
+    //     if (!data) {
+    //       res.push(newsId);
+    //       await AsyncStorage.setItem("bookmark", JSON.stringify(res));
+    //       alert("News Saved!");
+    //     }
+    //   } else {
+    //     await AsyncStorage.setItem("bookmark", JSON.stringify([newsId]));
+    //     alert("News Saved!");
+    //   }
+    // };
+
   const removeBookmark = async(newsId:  string) => {
     setBookmark(false);
     const bookmark = await AsyncStorage.getItem("bookmark").then((token) => {
@@ -71,17 +91,47 @@ const NewsDetails = (props: Props) => {
     alert("News unsaved!");
   };
 
+  //Bản chat
+  // const removeBookmark = async (newsId: string) => {
+  //   setBookmark(false);
+  //   const token = await AsyncStorage.getItem("bookmark");
+  //   const res = token ? JSON.parse(token) : [];
+  
+  //   if (Array.isArray(res)) {
+  //     const updatedBookmark = res.filter((id: string) => id !== newsId);
+  //     await AsyncStorage.setItem("bookmark", JSON.stringify(updatedBookmark));
+  //     alert("News unsaved!");
+  //   }
+  // };
+  
+
   const renderBookmark = async (newsId: string) => {
     await AsyncStorage.getItem("bookmark").then((token) => {
       const res = JSON.parse(token);
+      
       if (res != null) {
         let data = res.find((value: string) => value === newsId);
         return data == null ? setBookmark(false) : setBookmark(true);
       }
     });
   }
+
+  //Bản chat 
+  // const renderBookmark = async (newsId: string) => {
+  //   const token = await AsyncStorage.getItem("bookmark");
+  //   const res = token ? JSON.parse(token) : [];
+  
+  //   if (Array.isArray(res)) {
+  //     const data = res.find((value: string) => value === newsId);
+  //     setBookmark(data != null);
+  //   } else {
+  //     setBookmark(false);
+  //   }
+  // };
+  
   
   return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
     <>
     <Stack.Screen options={{
       headerLeft: () => (
@@ -93,8 +143,8 @@ const NewsDetails = (props: Props) => {
         <TouchableOpacity 
         onPress={() => 
         bookmark 
-        ? removeBookmark(new[0].article_id) 
-        : saveBookmark(new[0].article_id)
+        ? removeBookmark(news[0].article_id) 
+        : saveBookmark(news[0].article_id)
         }>
           <Ionicons 
             name={bookmark ? "heart" : "heart-outline"} 
@@ -122,8 +172,8 @@ const NewsDetails = (props: Props) => {
       )}
     </ScrollView>
     )}
-    
     </>
+    </GestureHandlerRootView>
   )
 }
 

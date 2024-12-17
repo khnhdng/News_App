@@ -12,6 +12,7 @@ import Animated, {
 } from "react-native-reanimated"
 import Pagination from "@/components/Pagination"
 
+
 type Props = {
   newsList: Array<NewsDataType>
 }
@@ -74,6 +75,7 @@ const BreakingNews = ({newsList}: Props) => {
   ]);
 
   return (
+
     <View style={styles.container}>
       <Text style={styles.title}>Breaking News</Text>
       <View style={styles.slideWrapper}>
@@ -104,9 +106,9 @@ const BreakingNews = ({newsList}: Props) => {
         <Pagination items={newsList} scrollX={scrollX} paginationIndex={paginationIndex}/>
       </View>
     </View>
+ 
   );
 }
-
 export default BreakingNews
 
 const styles = StyleSheet.create({
@@ -126,5 +128,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   }
 })
-
-// 56:27
