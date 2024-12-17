@@ -63,6 +63,7 @@ const Page = (props: Props) => {
             <TouchableOpacity onPress={() => router.back()}>
               <Ionicons name="arrow-back" size={22} color={colors.text} />
             </TouchableOpacity>
+<<<<<<< HEAD
           ),
           title: 'Search',
           headerStyle: { backgroundColor: colors.background },
@@ -91,6 +92,26 @@ const Page = (props: Props) => {
           />
         )}
       </View>
+=======
+        ),
+        title: "Search"
+    }}/>
+        <View style={styles.container}>
+            {isLoading ? (
+                <Loading size = {'large'}/>
+            ):(
+                <FlatList data={news} keyExtractor={(_, index) => `list_item${index}`} showsHorizontalScrollIndicator={false} 
+                renderItem={({index, item})=>{
+                    return <Link href={`/news/${item.article_id}`} asChild key={index}>
+                              <TouchableOpacity>
+                                <NewsItem item={item} />
+                            </TouchableOpacity>
+                    </Link>
+                }} 
+            />
+            )}
+        </View>
+>>>>>>> fe17185a074d4aef2fa8a43ac5a8701388773e0d
     </>
   );
 };

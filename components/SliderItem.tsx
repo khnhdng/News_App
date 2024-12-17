@@ -1,10 +1,9 @@
-import { Dimensions, Image, StyleSheet, View, Text } from 'react-native'
+import { TouchableOpacity, Dimensions, Image, StyleSheet, View, Text } from 'react-native'
 import React from 'react'
 import { NewsDataType } from '@/types'
 import Animated, { Extrapolation, interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Colors } from "@/constants/Colors"
-import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Link } from "expo-router"
 
 type Props = {
@@ -61,6 +60,7 @@ const SliderItem = ({slideItem, index, scrollX}: Props) => {
         </Animated.View>
       </TouchableOpacity>
     </Link>
+
   )
 }
 
@@ -115,3 +115,4 @@ const styles = StyleSheet.create({
       fontWeight: '600'
     }
 })
+

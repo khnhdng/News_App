@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, View, Text, ViewToken, useWindowDimensions } from 'react-native'
-import React, {useRef, useState} from 'react'
+import React, { useEffect, useRef, useState} from 'react'
 import { Colors } from '@/constants/Colors'
 import { NewsDataType} from '@/types'
 import SliderItem from "@/components/SliderItem"
@@ -11,7 +11,7 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated"
 import Pagination from "@/components/Pagination"
-import { useEffect } from 'react'
+
 
 type Props = {
   newsList: Array<NewsDataType>
@@ -43,7 +43,10 @@ const BreakingNews = ({newsList}: Props) => {
       }, 5000);
     } else {
       clearInterval(interval.current);
-    };
+    }
+    return() => {
+      clearInterval(interval.current);
+    }
   }, [isAutoPlay, offset, width]);
 
   useDerivedValue (() => {
@@ -72,6 +75,7 @@ const BreakingNews = ({newsList}: Props) => {
   ]);
 
   return (
+
     <View style={styles.container}>
       <Text style={styles.title}>Breaking News</Text>
       <View style={styles.slideWrapper}>
@@ -102,9 +106,9 @@ const BreakingNews = ({newsList}: Props) => {
         <Pagination items={newsList} scrollX={scrollX} paginationIndex={paginationIndex}/>
       </View>
     </View>
+ 
   );
 }
-
 export default BreakingNews
 
 const styles = StyleSheet.create({
