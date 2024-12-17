@@ -7,6 +7,7 @@ import CheckBox from '@/components/CheckBox'
 import { useNewsCategories } from '@/hooks/useNewsCategories'
 import { useNewsCountries } from '@/hooks/useNewsCountry'
 import { Link } from 'expo-router'
+import newsCategoryList from '@/constants/Categories'
 
 
 
@@ -29,7 +30,7 @@ const Page = (props: Props) => {
       <SearchBar withHorizontalPadding = {false} setSearchQuery={setSearchQuery}/>
       <Text style={styles.title}>Categories</Text>
       <View style={styles.listContainer}>
-      {newsCategories.map((item) => (
+      {newsCategoryList.map((item) => (
         <CheckBox 
           key={item.id} 
           label={item.title} 
@@ -74,6 +75,7 @@ export default Page
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingHorizontal: 20
     // justifyContent: "center",
     // alignItems: "center",
   },

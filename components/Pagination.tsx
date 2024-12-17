@@ -15,6 +15,7 @@ const Pagination = ({items, paginationIndex, scrollX}: Props) => {
     <View style={styles.container}>
         {items.map((_, index) => {
             return(
+                //dấu 3 chấm
                 <Animated.View style={[styles.dot, {backgroundColor: paginationIndex === index ? Colors.tint : Colors.darkGrey
                 },
                 ]} 

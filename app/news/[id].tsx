@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   newsInfoWrapper: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 2
+    marginBottom: 20
   },
   newsInfo: {
     fontSize: 12,

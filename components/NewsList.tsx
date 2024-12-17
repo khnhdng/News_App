@@ -33,7 +33,7 @@ export default NewsList
 export const NewsItem = ({item}: {item: NewsDataType}) => {
     return(
         <View style={styles.itemContainer}>
-        <Image source={{uri: item.image_url}} style={styles.ItemImg}/>
+        <Image source={{uri: item.image_url}} style={styles.itemImg}/>
         <View style={styles.itemInfo}>
             <Text style ={styles.itemCategory}>{item.category}</Text>
             <Text style = {styles.itemTitle} >{item.title}</Text>
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
         flex: 1,
         gap: 10
     },
-    ItemImg:{
+    itemImg:{
         width: 90,
         height: 100,
         borderRadius: 20,
