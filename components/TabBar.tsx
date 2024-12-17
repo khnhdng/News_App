@@ -4,6 +4,7 @@ import TabBarButton from "@/components/TabBarButton";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useState } from "react";
 import { Colors } from "@/constants/Colors";
+import { icon } from "@/constants/Icons"; // Đảm bảo 'icon' đã được khai báo đúng
 
 export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const [dimensions, setDimensions] = useState({ height: 20, width: 100 });
@@ -16,7 +17,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
       width: e.nativeEvent.layout.width,
     });
   };
-  
+
   const tabPositionX = useSharedValue(0);
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -24,7 +25,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
       transform: [{ translateX: tabPositionX.value }],
     };
   });
-  
+
   return (
     <View onLayout={onTabbarLayout} style={styles.tabbar}>
       <Animated.View style={[animatedStyle, {
@@ -37,20 +38,20 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
       }]} />
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
-        const label =
-          options.tabBarLabel !== undefined
-            ? options.tabBarLabel
-            : options.title !== undefined
-            ? options.title
-            : route.name;
+
+        const label = options.tabBarLabel !== undefined
+          ? options.tabBarLabel
+          : options.title !== undefined
+          ? options.title
+          : route.name;
 
         const isFocused = state.index === index;
 
         const onPress = () => {
           tabPositionX.value = withTiming(buttonWidth * index, {
             duration: 200,
-          }); 
-          
+          });
+
           const event = navigation.emit({
             type: "tabPress",
             target: route.key,
@@ -58,7 +59,10 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
           });
 
           if (!isFocused && !event.defaultPrevented) {
-            navigation.navigate(route.name, route.params);
+            // Chắc chắn route.name là một key hợp lệ trong icon
+            if (icon.hasOwnProperty(route.name)) {
+              navigation.navigate(route.name, route.params);
+            }
           }
         };
 
@@ -69,14 +73,20 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
           });
         };
 
+        // Kiểm tra và ép kiểu routeName cho hợp lệ
+        const routeName = route.name as keyof typeof icon;
+
+        // Đảm bảo rằng label là kiểu string
+        const labelString = label ? label.toString() : '';
+
         return (
           <TabBarButton
             key={route.name}
             onPress={onPress}
             onLongPress={onLongPress}
             isFocused={isFocused}
-            routeName={route.name}
-            label={label}
+            routeName={routeName}  // Truyền đúng routeName
+            label={labelString} // Truyền label là string
           />
         );
       })}
@@ -87,8 +97,8 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
 const styles = StyleSheet.create({
   tabbar: {
     flexDirection: 'row',
-    paddingTop: 16,
-    paddingBottom:40,
+    paddingTop: 10,
+    paddingBottom: 10,
     backgroundColor: Colors.white,
-  }
-})
+  },
+});

@@ -25,7 +25,7 @@ const NewsList = ({newsList}:Props) => {
       ))
     )}
     </View>
-  )
+  ) 
 }
 
 export default NewsList

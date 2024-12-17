@@ -3,41 +3,69 @@ import {
   StyleSheet, 
   Text, 
   TouchableOpacity, 
-  View
+  View 
 } from "react-native";
 import React from "react";
 import { useRouter } from "expo-router";
 import { Colors } from "react-native/Libraries/NewAppScreen";
-import Animated, { FadeInDown, FadeInRight } from "react-native-reanimated"
-import { StatusBar } from "expo-status-bar"
-
+import Animated, { FadeInDown, FadeInRight } from "react-native-reanimated";
+import { StatusBar } from "expo-status-bar";
 
 const Page = () => {
   const router = useRouter();
 
   return (
-
-      <View style={styles.container}>
-      <StatusBar style="light"/>
+    <View style={styles.container}>
+      <StatusBar style="light" />
       <ImageBackground 
         source={require("../assets/images/getting-started.jpg")} 
-        style = {{ width: "100%", height: "100%"}} 
+        style={{ width: "100%", height: "100%" }} 
         resizeMode="cover"
       >
-      <View style={styles.wrapper}>
-        <Animated.Text style={styles.title} entering={FadeInRight.delay(300).duration(500)}>Stay Updated!</Animated.Text>
-        <Animated.Text style={styles.description} entering={FadeInRight.delay(700).duration(500)}
-        >Get breaking news and personalized updates directly to your feed.</Animated.Text>
-        <Animated.View entering={FadeInDown.delay(1200).duration(500)}>
-        <TouchableOpacity style={styles.btn} onPress={() => router.replace("/(tabs)")}>
-          <Text style={styles.btnText}>Get Started</Text>
-        </TouchableOpacity>
-        </Animated.View>
-      </View>
+        <View style={styles.wrapper}>
+          <Animated.Text 
+            style={styles.title} 
+            entering={FadeInRight.delay(300).duration(500)}
+          >
+            Stay Updated!
+          </Animated.Text>
+          <Animated.Text 
+            style={styles.description} 
+            entering={FadeInRight.delay(700).duration(500)}
+          >
+            Get breaking news and personalized updates directly to your feed.
+          </Animated.Text>
+          <Animated.View entering={FadeInDown.delay(1200).duration(500)}>
+            <TouchableOpacity 
+              style={styles.btn} 
+              onPress={() => router.replace("/(tabs)")}
+            >
+              <Text style={styles.btnText}>Get Started</Text>
+            </TouchableOpacity>
+          </Animated.View>
+
+          {/* Thêm nút Đăng nhập trên nút Đăng ký */}
+          <Animated.View entering={FadeInDown.delay(1600).duration(500)}>
+            <TouchableOpacity 
+              style={styles.btn} 
+              onPress={() => router.replace("./(tabs)/auth/Login.tsx")}  
+            >
+              <Text style={styles.btnText}>Đăng nhập</Text>
+            </TouchableOpacity>
+          </Animated.View>
+
+          {/* Thêm nút Đăng ký dưới nút Đăng nhập */}
+          <Animated.View entering={FadeInDown.delay(1900).duration(500)}>
+            <TouchableOpacity 
+              style={styles.btn} 
+              onPress={() => router.replace("./(tabs)/auth/Register.tsx")}  
+            >
+              <Text style={styles.btnText}>Đăng ký</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        </View>
       </ImageBackground>
     </View>
-
-    
   );
 };
 
@@ -49,13 +77,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  wrapper:{
+  wrapper: {
     flex: 1,
     justifyContent: 'flex-end',
     paddingBottom: 50,
     paddingHorizontal: 30,
     gap: 10,
-    backgroundColor:'rgba(0,0,0,0.5)'
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   title: {
     color: Colors.white,
@@ -63,26 +91,26 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     letterSpacing: 1.5,
     lineHeight: 36,
-    textAlign: 'center'
+    textAlign: 'center',
   },
-  description:{
+  description: {
     color: Colors.white,
     fontSize: 16,
     fontWeight: '500',
     letterSpacing: 1.2,
     lineHeight: 22,
-    textAlign: 'center'
+    textAlign: 'center',
   },
-  btn:{
+  btn: {
     backgroundColor: '#ff4c4c',
     paddingVertical: 15,
-    marginVertical: 20,
+    marginVertical: 5,  // Giảm khoảng cách giữa các nút
     alignItems: 'center',
     borderRadius: 15,
   },
-  btnText:{
+  btnText: {
     color: Colors.white,
     fontSize: 16,
-    fontWeight: '700'
-  }
+    fontWeight: '700',
+  },
 });

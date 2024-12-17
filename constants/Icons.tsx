@@ -25,4 +25,17 @@ export const icon = {
     ) : (
       <Ionicons name="settings-outline" size={24} color={color} />
     ),
-};
+  // Thêm các icon cho màn hình auth/Register và auth/Login
+  'auth/Register': ({ color, focused }: { color: string; focused: boolean }) =>
+    focused ? (
+      <Ionicons name="person-add" size={24} color={color} />
+    ) : (
+      <Ionicons name="person-add-outline" size={24} color={color} />
+    ),
+  'auth/Login': ({ color, focused }: { color: string; focused: boolean }) =>
+    focused ? (
+      <Ionicons name="log-in" size={24} color={color} />
+    ) : (
+      <Ionicons name="log-in-outline" size={24} color={color} />
+    ),
+} as const; // Thêm "as const" để giữ kiểu cố định

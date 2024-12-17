@@ -1,54 +1,57 @@
-import { Pressable, StyleSheet } from "react-native";
-import React, { useEffect } from "react";
-import { icon } from "@/constants/Icons";
+import { Pressable, StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { icon } from '@/constants/Icons';  // Đảm bảo 'icon' đã được khai báo đúng
 import Animated, {
   interpolate,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-} from "react-native-reanimated";
-import { Colors } from "@/constants/Colors";
+} from 'react-native-reanimated';
+import { Colors } from '@/constants/Colors';
 
-const TabBarButton = ({
+type RouteName = keyof typeof icon;
+
+interface TabBarButtonProps {
+  onPress: () => void;
+  onLongPress: () => void;
+  isFocused: boolean;
+  routeName: RouteName;
+  label: string;
+}
+
+const TabBarButton: React.FC<TabBarButtonProps> = ({
   onPress,
   onLongPress,
   isFocused,
   routeName,
   label,
-}: {
-  onPress: Function;
-  onLongPress: Function;
-  isFocused: boolean;
-  routeName: string;
-  label: string;
 }) => {
   const opacity = useSharedValue(0);
 
   useEffect(() => {
-    opacity.value = withSpring(
-      typeof isFocused === "boolean" ? (isFocused ? 1 : 0) : isFocused,
-      { duration: 50 }
-    );
-  }, [opacity, isFocused]);
+    opacity.value = withSpring(isFocused ? 1 : 0, { duration: 50 });
+  }, [isFocused]);
 
   const animatedTextStyle = useAnimatedStyle(() => {
     const opacityValue = interpolate(opacity.value, [0, 1], [1, 0]);
-
-    return {
-      opacity: opacityValue,
-    };
+    return { opacity: opacityValue };
   });
 
+  // Kiểm tra và đảm bảo rằng 'routeName' là một key hợp lệ trong 'icon'
+  const IconComponent = icon[routeName];
+  if (!IconComponent) {
+    console.error(`Icon for ${routeName} is not defined`);
+    return null; // Hoặc hiển thị một icon mặc định
+  }
+
   return (
-    <Pressable
-      onPress={onPress}
-      onLongPress={onLongPress}
-      style={styles.tabbarBtn}
-    >
-      {icon[routeName]({
+    <Pressable onPress={onPress} onLongPress={onLongPress} style={styles.tabbarBtn}>
+      {/* Render icon với routeName */}
+      {IconComponent({
         color: isFocused ? Colors.tabIconSelected : Colors.tabIconDefault,
         focused: isFocused,
       })}
+      {/* Animated text */}
       <Animated.Text
         style={[
           {
@@ -69,8 +72,8 @@ export default TabBarButton;
 const styles = StyleSheet.create({
   tabbarBtn: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     gap: 5,
   },
 });

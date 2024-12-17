@@ -3,10 +3,9 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@/*": [
-        "./*"
-      ]
-    }
+      "@/*": ["./*"]
+    },
+    "jsx": "react-native" // Đảm bảo bổ sung jsx nếu kế thừa không tự động
   },
   "include": [
     "**/*.ts",
