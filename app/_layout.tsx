@@ -25,10 +25,13 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider> 
-      <Stack>
+     <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
+        <Stack.Screen name="auth/Login" options={{ headerTitle: "Đăng nhập" }} />
+        <Stack.Screen name="auth/Register" options={{ headerTitle: "Đăng ký" }} />
+    </Stack>
+
     </ThemeProvider>
   );
 }
