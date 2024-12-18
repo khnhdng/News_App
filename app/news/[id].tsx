@@ -62,24 +62,6 @@ const NewsDetails = (props: Props) => {
       })
     }
 
-    //Bản chát
-    // const saveBookmark = async (newsId: string) => {
-    //   setBookmark(true);
-    //   const token = await AsyncStorage.getItem("bookmark");
-    //   const res = token ? JSON.parse(token) : []; // Xử lý token là null
-    
-    //   if (Array.isArray(res)) {
-    //     let data = res.find((value: string) => value === newsId);
-    //     if (!data) {
-    //       res.push(newsId);
-    //       await AsyncStorage.setItem("bookmark", JSON.stringify(res));
-    //       alert("News Saved!");
-    //     }
-    //   } else {
-    //     await AsyncStorage.setItem("bookmark", JSON.stringify([newsId]));
-    //     alert("News Saved!");
-    //   }
-    // };
 
   const removeBookmark = async(newsId:  string) => {
     setBookmark(false);
@@ -91,19 +73,7 @@ const NewsDetails = (props: Props) => {
     alert("News unsaved!");
   };
 
-  //Bản chat
-  // const removeBookmark = async (newsId: string) => {
-  //   setBookmark(false);
-  //   const token = await AsyncStorage.getItem("bookmark");
-  //   const res = token ? JSON.parse(token) : [];
-  
-  //   if (Array.isArray(res)) {
-  //     const updatedBookmark = res.filter((id: string) => id !== newsId);
-  //     await AsyncStorage.setItem("bookmark", JSON.stringify(updatedBookmark));
-  //     alert("News unsaved!");
-  //   }
-  // };
-  
+
 
   const renderBookmark = async (newsId: string) => {
     await AsyncStorage.getItem("bookmark").then((token) => {
@@ -116,19 +86,7 @@ const NewsDetails = (props: Props) => {
     });
   }
 
-  //Bản chat 
-  // const renderBookmark = async (newsId: string) => {
-  //   const token = await AsyncStorage.getItem("bookmark");
-  //   const res = token ? JSON.parse(token) : [];
-  
-  //   if (Array.isArray(res)) {
-  //     const data = res.find((value: string) => value === newsId);
-  //     setBookmark(data != null);
-  //   } else {
-  //     setBookmark(false);
-  //   }
-  // };
-  
+
   
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

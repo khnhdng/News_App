@@ -1,14 +1,37 @@
-import { StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { Stack } from 'expo-router'
 import { MaterialIcons } from '@expo/vector-icons'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router';
 
 type Props = {}
 
 const Page = (props: Props) => {
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    Alert.alert(
+      "Logout",
+      "Are you sure you want to log out?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Confirm",
+          onPress: async () => {
+            // Clear stored user data (if any)
+            await AsyncStorage.removeItem('userToken');
+            // Navigate to the login page
+            router.replace("/login");
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
   return (
     <>
       <Stack.Screen options={{
@@ -47,9 +70,9 @@ const Page = (props: Props) => {
             />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.itemBtn}>
-          <Text style={[styles.itemBtn, {color: 'red'}]}>Logout</Text>
-          <MaterialIcons name='logout' size={16} color={'red'}/>
+        <TouchableOpacity style={styles.itemBtn} onPress={handleLogout}>
+          <Text style={styles.itemBtnTxt}>Logout</Text>
+          <MaterialIcons name='logout' size={16}/>
         </TouchableOpacity>
       </View>
     </>

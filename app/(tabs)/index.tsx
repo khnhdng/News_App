@@ -11,6 +11,7 @@ import NewsList from '@/components/NewsList'
 import Categories from '@/components/Categories'
 import Loading from '@/components/Loading'
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { EXPO_PUBLIC_API_KEY } from '@env';
 
 
 type Props = {}
@@ -25,9 +26,10 @@ const Page = (props: Props) => {
     getBreakingNews();
     getNews();
   }, []);
+
   const getBreakingNews = async() => {
     try {
-      const URL = `https://newsdata.io/api/1/news?apikey=${process.env.EXPO_PUBLIC_API_KEY}&country=in&language=en&image=1&removeduplicate=1&size=5`
+      const URL = `https://newsdata.io/api/1/news?apikey=${EXPO_PUBLIC_API_KEY}&country=in&language=en&image=1&removeduplicate=1&size=5`
       const response = await axios .get(URL);
 
       if (response && response.data) {
@@ -45,7 +47,7 @@ const Page = (props: Props) => {
         categoryString = `&category=${category}`
       }
 
-      const URL = `https://newsdata.io/api/1/news?apikey=${process.env.EXPO_PUBLIC_API_KEY}&language=en&image=1&removeduplicate=1&size=10${categoryString}`
+      const URL = `https://newsdata.io/api/1/news?apikey=${EXPO_PUBLIC_API_KEY}&language=en&image=1&removeduplicate=1&size=10${categoryString}`
       const response = await axios .get(URL);
 
       if (response && response.data) {
@@ -56,6 +58,8 @@ const Page = (props: Props) => {
       console.log('Error Message: ', err.message);
     }
   }
+
+
   const onCatChanged = (category:string) => {
     console.log('Category: ', category);
     setNews([]);

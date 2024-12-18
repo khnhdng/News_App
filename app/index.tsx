@@ -5,13 +5,12 @@ import {
   TouchableOpacity, 
   View
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import Animated, { FadeInDown, FadeInRight } from "react-native-reanimated"
 import { StatusBar } from "expo-status-bar"
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-
 
 const Page = () => {
   const router = useRouter();
@@ -20,6 +19,7 @@ const Page = () => {
 <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={styles.container}>
       <StatusBar style="light"/>
+      <StatusBar style="light" />
       <ImageBackground 
         source={require("../assets/images/getting-started.jpg")} 
         style = {{ width: "100%", height: "100%"}} 
@@ -30,7 +30,7 @@ const Page = () => {
         <Animated.Text style={styles.description} entering={FadeInRight.delay(700).duration(500)}
         >Get breaking news and personalized updates directly to your feed.</Animated.Text>
         <Animated.View entering={FadeInDown.delay(1200).duration(500)}>
-        <TouchableOpacity style={styles.btn} onPress={() => router.replace("/(tabs)")}>
+        <TouchableOpacity style={styles.btn} onPress={() => router.replace("/login")}>
           <Text style={styles.btnText}>Get Started</Text>
         </TouchableOpacity>
         </Animated.View>
