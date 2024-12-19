@@ -1,12 +1,25 @@
 import { Image, StyleSheet, View, Text } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import { Colors } from '@/constants/Colors'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 type Props = {}
 
 const Header = (props: Props) => {
+  const [userName, setUserName] = useState('');
+  
+  useEffect(() => {
+    const fetchUserName = async () => {
+      const name = await AsyncStorage.getItem('userName');
+      if (name) {
+        setUserName(name);
+      }
+    };
+    fetchUserName();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.userInfo}>
@@ -16,7 +29,7 @@ const Header = (props: Props) => {
         />
         <View style={{gap: 3}}>
             <Text style={styles.welcomeTxt}>Welcome!</Text>
-            <Text style={styles.userName}>Ti Hon</Text>
+            <Text style={styles.userName}>{userName || 'User'}</Text>
         </View>
       
       </View>

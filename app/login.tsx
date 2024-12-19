@@ -28,7 +28,6 @@ const LoginPage = () => {
       const storedPassword = await AsyncStorage.getItem('userPassword');
 
       if (email === storedEmail && password === storedPassword) {
-        alert("Login successful");
         router.replace("/(tabs)");
       } else {
         alert( "Incorrect email or password");
@@ -42,11 +41,7 @@ const LoginPage = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <ImageBackground 
-        source={require("../assets/images/getting-started.jpg")} 
-        style = {{ width: "100%", height: "100%"}} 
-        resizeMode="cover"
-      >
+
       <View style={styles.container}>
         <Text style={styles.title}>Login</Text>
         <TextInput
@@ -79,7 +74,7 @@ const LoginPage = () => {
           </Text>
         </TouchableOpacity>
       </View>
-      </ImageBackground>
+
     </GestureHandlerRootView>
   );
 };

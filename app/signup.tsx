@@ -15,42 +15,85 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SignUpPage = () => {
   const router = useRouter();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState(""); 
 
-  const handleSignUp = async () => {
-    if (!email || !password || !confirmPassword) {
-        alert("Please fill in all fields");
-        return;
-    }
-    if (password !== confirmPassword) {
-        alert("Passwords do not match");
-        return;
-    }
-    try {
-        await AsyncStorage.setItem('userEmail', email);
-        await AsyncStorage.setItem('userPassword', password);
-        alert("Sign up successful");
-  
-        router.replace("/login");
-      } catch (error) {
-        console.error("Error during login:", error);
-        alert("An error occurred. Please try again.");
-      }
-    };
+  const [nameError, setNameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
+  // Định dạng email hợp lệ
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
+    return emailRegex.test(email);
+  };
 
+  const handleSignup = () => {
+    let isValid = true;
+
+    // Reset lỗi cũ
+    setNameError("");
+    setEmailError("");
+    setPasswordError("");
+    setConfirmPasswordError("");
+
+    // Kiểm tra các trường
+    if (!name) {
+      setNameError("Name is required.");
+      isValid = false;
+    }
+    if (!email) {
+      setEmailError("Email is required.");
+      isValid = false;
+    } else if (!validateEmail(email)) {
+      setEmailError("Invalid email format.");
+      isValid = false;
+    }
+    if (!password) {
+      setPasswordError("Password is required.");
+      isValid = false;
+    } else if (password.length < 6) {
+      setPasswordError("Password must be at least 6 characters long.");
+      isValid = false;
+    }
+    if (!confirmPassword) {
+      setConfirmPasswordError("Confirm Password is required.");
+      isValid = false;
+    } else if (password !== confirmPassword) {
+      setConfirmPasswordError("Passwords do not match.");
+      isValid = false;
+    }
+
+    if (isValid) {
+      // Lưu thông tin đăng ký
+      const userData = { name, email, password };
+      AsyncStorage.setItem("userData", JSON.stringify(userData))
+        .then(() => {
+          router.replace("/login");
+        })
+        .catch((error) => {
+          console.error("Failed to save user data", error);
+        });
+    }
+  };
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-    <ImageBackground 
-        source={require("../assets/images/getting-started.jpg")} 
-        style = {{ width: "100%", height: "100%"}} 
-        resizeMode="cover"
-      >
+
       <View style={styles.container}>
         <Text style={styles.title}>Sign Up</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Name"
+          placeholderTextColor={Colors.lightGrey}
+          value={name}
+          onChangeText={setName}
+          autoCapitalize="none"
+        />
+        {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
         <TextInput
           style={styles.input}
           placeholder="Email"
@@ -60,6 +103,7 @@ const SignUpPage = () => {
           keyboardType="email-address"
           autoCapitalize="none"
         />
+         {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
         <TextInput
           style={styles.input}
           placeholder="Password"
@@ -68,6 +112,7 @@ const SignUpPage = () => {
           onChangeText={setPassword}
           secureTextEntry
         />
+         {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
         <TextInput
           style={styles.input}
           placeholder="Confirm Password"  
@@ -76,20 +121,20 @@ const SignUpPage = () => {
           onChangeText={setConfirmPassword}
           secureTextEntry
         />
-        <TouchableOpacity style={styles.authButton} onPress={handleSignUp}>
-          <Text style={styles.authButtonText}>Sign Up</Text>
-        </TouchableOpacity>
+          {confirmPasswordError ? (
+          <Text style={styles.errorText}>{confirmPasswordError}</Text>
+           ) : null}
 
-        <TouchableOpacity
-          onPress={() => router.replace("/login")} // Chuyển sang trang đăng nhập
-          style={styles.toggleButton}
-        >
-          <Text style={styles.toggleButtonText}>
-            Already have an account? Login
-          </Text>
-        </TouchableOpacity>
+      {/* Sign Up Button */}
+      <TouchableOpacity style={styles.authButton} onPress={handleSignup}>
+        <Text style={styles.authButtonText}>Sign Up</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => router.replace("/login")} style={styles.toggleButton}>
+        <Text style={styles.toggleButtonText}>Already have an account? Login</Text>
+      </TouchableOpacity>
       </View>
-      </ImageBackground>
+
     </GestureHandlerRootView>
   );
 };
@@ -140,5 +185,11 @@ const styles = StyleSheet.create({
     color: Colors.blue,
     fontSize: 14,
     textDecorationLine: "underline",
+  },
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    marginBottom: 10,
+    alignSelf: "flex-start",
   },
 });
