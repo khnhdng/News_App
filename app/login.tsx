@@ -23,16 +23,15 @@ const LoginPage = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+      const response = await fetch("http://192.168.1.6:3000/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
       });
+
 
       const data = await response.json();
       if (response.ok) {
-        Alert.alert("Success", "Logged in successfully!");
-        // Lưu token vào AsyncStorage (nếu cần dùng sau này)
         await AsyncStorage.setItem("token", data.token);
         router.replace("/(tabs)");
       } else {

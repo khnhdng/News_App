@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { Colors } from "react-native/Libraries/NewAppScreen";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SignupPage = () => {
   const router = useRouter();
@@ -44,15 +45,17 @@ const SignupPage = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
+      const response = await fetch("http://192.168.1.6:3000/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password }),
       });
+
 
       const data = await response.json();
       if (response.ok) {
         Alert.alert("Success", "Signup successful! Redirecting to login...");
+        await AsyncStorage.setItem('userName', name);
         router.replace("/login");
       } else {
         Alert.alert("Error", data.message || "Failed to sign up.");
