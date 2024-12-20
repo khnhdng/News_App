@@ -1,145 +1,110 @@
 import React, { useState } from "react";
 import {
-  Alert,
-    ImageBackground,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
+  Alert,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Colors } from "react-native/Libraries/NewAppScreen";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const SignUpPage = () => {
+const SignupPage = () => {
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState(""); 
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const [nameError, setNameError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState("");
-
-  // Định dạng email hợp lệ
   const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
-  const handleSignup = () => {
-    let isValid = true;
-
-    // Reset lỗi cũ
-    setNameError("");
-    setEmailError("");
-    setPasswordError("");
-    setConfirmPasswordError("");
-
-    // Kiểm tra các trường
-    if (!name) {
-      setNameError("Name is required.");
-      isValid = false;
-    }
-    if (!email) {
-      setEmailError("Email is required.");
-      isValid = false;
-    } else if (!validateEmail(email)) {
-      setEmailError("Invalid email format.");
-      isValid = false;
-    }
-    if (!password) {
-      setPasswordError("Password is required.");
-      isValid = false;
-    } else if (password.length < 6) {
-      setPasswordError("Password must be at least 6 characters long.");
-      isValid = false;
-    }
-    if (!confirmPassword) {
-      setConfirmPasswordError("Confirm Password is required.");
-      isValid = false;
-    } else if (password !== confirmPassword) {
-      setConfirmPasswordError("Passwords do not match.");
-      isValid = false;
+  const handleSignup = async () => {
+    if (!name || !email || !password || !confirmPassword) {
+      Alert.alert("Error", "All fields are required.");
+      return;
     }
 
-    if (isValid) {
-      // Lưu thông tin đăng ký
-      const userData = { name, email, password };
-      AsyncStorage.setItem("userData", JSON.stringify(userData))
-        .then(() => {
-          router.replace("/login");
-        })
-        .catch((error) => {
-          console.error("Failed to save user data", error);
-        });
+    if (!validateEmail(email)) {
+      Alert.alert("Error", "Invalid email format. Please include '@' and domain.");
+      return;
+    }
+
+    if (password.length < 6) {
+      Alert.alert("Error", "Password must be at least 6 characters long.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      Alert.alert("Error", "Passwords do not match.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:3000/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        Alert.alert("Success", "Signup successful! Redirecting to login...");
+        router.replace("/login");
+      } else {
+        Alert.alert("Error", data.message || "Failed to sign up.");
+      }
+    } catch (error) {
+      Alert.alert("Error", "Network error. Please try again.");
+      console.error(error);
     }
   };
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-
-      <View style={styles.container}>
-        <Text style={styles.title}>Sign Up</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Name"
-          placeholderTextColor={Colors.lightGrey}
-          value={name}
-          onChangeText={setName}
-          autoCapitalize="none"
-        />
-        {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          placeholderTextColor={Colors.lightGrey}
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-         {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          placeholderTextColor={Colors.lightGrey}
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-         {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
-        <TextInput
-          style={styles.input}
-          placeholder="Confirm Password"  
-          placeholderTextColor={Colors.lightGrey}
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          secureTextEntry
-        />
-          {confirmPasswordError ? (
-          <Text style={styles.errorText}>{confirmPasswordError}</Text>
-           ) : null}
-
-      {/* Sign Up Button */}
+    <View style={styles.container}>
+      <Text style={styles.title}>Sign Up</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Name"
+        value={name}
+        onChangeText={setName}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
+        keyboardType="email-address"
+        autoCapitalize="none"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Confirm Password"
+        value={confirmPassword}
+        onChangeText={setConfirmPassword}
+        secureTextEntry
+      />
       <TouchableOpacity style={styles.authButton} onPress={handleSignup}>
         <Text style={styles.authButtonText}>Sign Up</Text>
       </TouchableOpacity>
-
       <TouchableOpacity onPress={() => router.replace("/login")} style={styles.toggleButton}>
         <Text style={styles.toggleButtonText}>Already have an account? Login</Text>
       </TouchableOpacity>
-      </View>
-
-    </GestureHandlerRootView>
+    </View>
   );
 };
 
-export default SignUpPage;
+export default SignupPage;
 
 const styles = StyleSheet.create({
   container: {
@@ -185,11 +150,5 @@ const styles = StyleSheet.create({
     color: Colors.blue,
     fontSize: 14,
     textDecorationLine: "underline",
-  },
-  errorText: {
-    color: "red",
-    fontSize: 12,
-    marginBottom: 10,
-    alignSelf: "flex-start",
   },
 });

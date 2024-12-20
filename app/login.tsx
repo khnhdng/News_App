@@ -1,81 +1,74 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
-  ImageBackground,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
+  Alert,
 } from "react-native";
-import { router, useRouter } from "expo-router";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { Colors } from "react-native/Libraries/NewAppScreen";
+import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
 const LoginPage = () => {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
   const handleLogin = async () => {
     if (!email || !password) {
-      alert("Please fill in both fields (Email and Password)");
+      Alert.alert("Error", "Email and password are required.");
       return;
     }
-    
-    try {
-      const storedEmail = await AsyncStorage.getItem('userEmail');
-      const storedPassword = await AsyncStorage.getItem('userPassword');
 
-      if (email === storedEmail && password === storedPassword) {
+    try {
+      const response = await fetch("http://localhost:3000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        Alert.alert("Success", "Logged in successfully!");
+        // Lưu token vào AsyncStorage (nếu cần dùng sau này)
+        await AsyncStorage.setItem("token", data.token);
         router.replace("/(tabs)");
       } else {
-        alert( "Incorrect email or password");
+        Alert.alert("Error", data.message || "Invalid email or password.");
       }
     } catch (error) {
-      console.error("Error during login:", error);
-      alert( "An error occurred. Please try again.");
+      Alert.alert("Error", "Network error. Please try again.");
+      console.error(error);
     }
   };
 
-
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-
-      <View style={styles.container}>
-        <Text style={styles.title}>Login</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          placeholderTextColor={Colors.lightGrey}
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          placeholderTextColor={Colors.lightGrey}
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-        <TouchableOpacity style={styles.authButton} onPress={handleLogin}>
-          <Text style={styles.authButtonText}>Login</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => router.replace("/signup")} 
-          style={styles.toggleButton}
-        >
-          <Text style={styles.toggleButtonText}>
-            Don't have an account? Sign Up
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-    </GestureHandlerRootView>
+    <View style={styles.container}>
+      <Text style={styles.title}>Login</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
+        keyboardType="email-address"
+        autoCapitalize="none"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+      />
+      <TouchableOpacity style={styles.authButton} onPress={handleLogin}>
+        <Text style={styles.authButtonText}>Login</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => router.replace("/signup")} style={styles.toggleButton}>
+        <Text style={styles.toggleButtonText}>Don't have an account? Sign Up</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 
@@ -125,5 +118,12 @@ const styles = StyleSheet.create({
     color: Colors.blue,
     fontSize: 14,
     textDecorationLine: "underline",
+  },
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    alignSelf: "flex-start",
+    marginLeft: 5,
+    marginBottom: 10,
   },
 });
