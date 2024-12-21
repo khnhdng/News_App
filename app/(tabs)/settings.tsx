@@ -25,9 +25,13 @@ const Settings = (props: Props) => {
           text: "Confirm",
           onPress: async () => {
             // Clear stored user data (if any)
-            await AsyncStorage.removeItem('userToken');
-            // Navigate to the login page
-            router.replace("/login");
+            try {
+              await AsyncStorage.removeItem('userToken');
+              router.replace("/login");
+            } catch (error) {
+              console.error("Error during logout:", error);
+            Alert.alert("Error", "Something went wrong during logout.");
+            }
           },
         },
       ],
