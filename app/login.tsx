@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,12 +9,32 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Dialog from "react-native-dialog";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isDialogVisible, setDialogVisible] = useState(false);
+  const [storedPassword, setStoredPassword] = useState(""); // Mật khẩu đã lưu
   const router = useRouter();
+
+  // Lấy mật khẩu đã lưu từ AsyncStorage khi trang login được mở
+  useEffect(() => {
+    const getStoredData = async () => {
+      const storedEmail = await AsyncStorage.getItem("userEmail");
+      const storedPassword = await AsyncStorage.getItem("userPassword");
+
+      if (storedEmail) {
+        setEmail(storedEmail);
+      }
+      if (storedPassword) {
+        setStoredPassword(storedPassword);  // Lưu mật khẩu đã lưu vào state
+      }
+    };
+
+    getStoredData();
+  }, []);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -23,23 +43,33 @@ const LoginPage = () => {
     }
 
     try {
-      const response = await fetch("http://192.168.1.6:3000/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-      });
+      // Lưu thông tin đăng nhập vào AsyncStorage
+      await AsyncStorage.setItem("userEmail", email);
+      await AsyncStorage.setItem("userPassword", password);
 
-
-      const data = await response.json();
-      if (response.ok) {
-        await AsyncStorage.setItem("token", data.token);
-        router.replace("/(tabs)");
-      } else {
-        Alert.alert("Error", data.message || "Invalid email or password.");
-      }
+      // Chuyển hướng đến trang chính
+      router.replace("/(tabs)");
     } catch (error) {
-      Alert.alert("Error", "Network error. Please try again.");
-      console.error(error);
+      console.error("Error during login:", error);
+      Alert.alert("Error", "Something went wrong. Please try again.");
+    }
+  };
+
+  // Hiển thị hộp thoại nhập mật khẩu khi nhấp vào email
+  const handleEmailPress = async () => {
+    if (storedPassword) {
+      setPassword(storedPassword); // Tự động điền mật khẩu nếu đã lưu
+    }
+    setDialogVisible(true);
+  };
+
+  // Đóng hộp thoại và xác nhận mật khẩu
+  const handlePasswordSubmit = () => {
+    setDialogVisible(false);  // Đóng hộp thoại
+    if (storedPassword) {
+      setPassword(storedPassword); // Đặt mật khẩu đã lưu vào ô mật khẩu
+    } else {
+      Alert.alert("Error", "No password stored.");
     }
   };
 
@@ -53,6 +83,7 @@ const LoginPage = () => {
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
+        onFocus={handleEmailPress}  // Khi nhấn vào email, sẽ hiển thị hộp thoại
       />
       <TextInput
         style={styles.input}
@@ -67,6 +98,22 @@ const LoginPage = () => {
       <TouchableOpacity onPress={() => router.replace("/signup")} style={styles.toggleButton}>
         <Text style={styles.toggleButtonText}>Don't have an account? Sign Up</Text>
       </TouchableOpacity>
+
+      {/* Dialog nhập mật khẩu */}
+      <Dialog.Container visible={isDialogVisible}>
+        <Dialog.Title>Enter Password</Dialog.Title>
+        <Dialog.Description>
+          Please enter the password stored for this email.
+        </Dialog.Description>
+        <Dialog.Input
+          placeholder="Password"
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+        />
+        <Dialog.Button label="Cancel" onPress={() => setDialogVisible(false)} />
+        <Dialog.Button label="Submit" onPress={handlePasswordSubmit} />
+      </Dialog.Container>
     </View>
   );
 };
@@ -117,12 +164,5 @@ const styles = StyleSheet.create({
     color: Colors.blue,
     fontSize: 14,
     textDecorationLine: "underline",
-  },
-  errorText: {
-    color: "red",
-    fontSize: 12,
-    alignSelf: "flex-start",
-    marginLeft: 5,
-    marginBottom: 10,
   },
 });
