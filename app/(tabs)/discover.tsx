@@ -26,21 +26,21 @@ const Page = (props: Props) => {
   
 
   return (
-    <View style={[styles.container, {paddingTop: safeTop + 20}]}>
-      <SearchBar withHorizontalPadding = {false} setSearchQuery={setSearchQuery}/>
+    <View style={[styles.container, { paddingTop: safeTop + 20 }]}>
+      <SearchBar withHorizontalPadding={false} setSearchQuery={setSearchQuery} />
       <Text style={styles.title}>Categories</Text>
       <View style={styles.listContainer}>
-      {newsCategoryList.map((item) => (
-        <CheckBox 
-          key={item.id} 
-          label={item.title} 
-          checked={item.selected} 
-          onPress={() => {
-            toggleNewsCategory(item.id)
-            setCategory(item.slug);
-          }}
+      {newsCategories.map((item) => (
+   <CheckBox
+            key={item.id}
+            label={item.title}
+            checked={item.selected}
+            onPress={() => {
+              toggleNewsCategory(item.id);
+              setCategory(item.slug);
+            }}
           />
-      ))}
+        ))}
       </View>
 
       <Text style={styles.title}>Country</Text>
