@@ -10,6 +10,7 @@ import NewsList from '@/components/NewsList'
 import Categories from '@/components/Categories'
 import Loading from '@/components/Loading'
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { useTheme } from '@/hooks/ThemeContext';// Import useTheme để lấy theme
 
 
 
@@ -20,6 +21,7 @@ const Page = (props: Props) => {
   const [breakingNews, setBreakingNews] = useState <NewsDataType[]> ([]);
   const [news, setNews] = useState <NewsDataType[]> ([]);
   const [isLoading, setISLoading] = useState(true);
+  const { colors } = useTheme(); // Lấy màu sắc từ theme
 
   useEffect(() => {
     getBreakingNews();
@@ -66,8 +68,9 @@ const Page = (props: Props) => {
   }
 
   return (
+    
     <GestureHandlerRootView style={{ flex: 1 }}>
-    <ScrollView style={[styles.container, {paddingTop: safeTop}]}>
+    <ScrollView style={[styles.container, { paddingTop: safeTop, backgroundColor: colors.background }]}>
       <Header />
       <SearchBar withHorizontalPadding={true} setSearchQuery={()=>{}}/>
       {isLoading ? (

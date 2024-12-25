@@ -1,9 +1,11 @@
 import React from 'react'
 import { Tabs } from 'expo-router'
 import { TabBar } from '@/components/TabBar'
+import { ThemeProvider } from '@/hooks/ThemeContext'
 
 const TabLayout = () => {
   return (
+    <ThemeProvider>
     <Tabs tabBar={(props) => <TabBar {...props} />}screenOptions={{headerShown: false}}>
       <Tabs.Screen
         name="index"
@@ -30,6 +32,7 @@ const TabLayout = () => {
         }}
       />
     </Tabs>
+    </ThemeProvider>
   )
 }
 
