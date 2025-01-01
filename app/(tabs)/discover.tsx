@@ -1,23 +1,21 @@
-import { StyleSheet, Text, View, TouchableOpacity} from 'react-native'
-import React, { useState } from 'react'
-import SearchBar from '@/components/SearchBar'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { Colors } from '@/constants/Colors'
-import CheckBox from '@/components/CheckBox'
-import { useNewsCategories } from '@/hooks/useNewsCategories'
-import { useNewsCountries } from '@/hooks/useNewsCountry'
-import { Link } from 'expo-router'
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import SearchBar from '@/components/SearchBar';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Colors } from '@/constants/Colors';
+import CheckBox from '@/components/CheckBox';
+import { useNewsCategories } from '@/hooks/useNewsCategories';
+import { useNewsCountries } from '@/hooks/useNewsCountry';
+import { Link } from 'expo-router';
 import { useTheme } from '@/hooks/ThemeContext'; // Import useTheme từ ThemeContext
+import { useFontSize } from '@/hooks/FontSizeContext'; // Import useFontSize để lấy cỡ chữ từ FontSizeContext
 
-
-
-type Props = {
-}
-
+type Props = {};
 
 const Page = (props: Props) => {
   const { top: safeTop } = useSafeAreaInsets();
-  const { colors } = useTheme();  // Lấy màu sắc từ theme
+  const { colors } = useTheme(); // Lấy màu sắc từ theme
+  const { fontSize } = useFontSize(); // Lấy cỡ chữ từ FontSizeContext
   const { newsCategories, toggleNewsCategory } = useNewsCategories();
   const { newsCountries, toggleNewsCountry } = useNewsCountries();
   const [searchQuery, setSearchQuery] = useState('');
@@ -27,7 +25,14 @@ const Page = (props: Props) => {
   return (
     <View style={[styles.container, { backgroundColor: colors.background, paddingTop: safeTop + 20 }]}>
       <SearchBar withHorizontalPadding={false} setSearchQuery={setSearchQuery} />
-      <Text style={[styles.title, { color: colors.text }]}>Categories</Text>
+      <Text
+        style={[
+          styles.title,
+          { color: colors.text, fontSize: fontSize === 1 ? 16 : fontSize === 2 ? 18 : 20 },
+        ]}
+      >
+        Categories
+      </Text>
       <View style={styles.listContainer}>
         {newsCategories.map((item) => (
           <CheckBox
@@ -42,7 +47,14 @@ const Page = (props: Props) => {
         ))}
       </View>
 
-      <Text style={[styles.title, { color: colors.text }]}>Country</Text>
+      <Text
+        style={[
+          styles.title,
+          { color: colors.text, fontSize: fontSize === 1 ? 16 : fontSize === 2 ? 18 : 20 },
+        ]}
+      >
+        Country
+      </Text>
       <View style={styles.listContainer}>
         {newsCountries.map((item, index) => (
           <CheckBox
@@ -65,7 +77,14 @@ const Page = (props: Props) => {
         asChild
       >
         <TouchableOpacity style={styles.searchBtn}>
-          <Text style={styles.searchBtnTxt}>Search</Text>
+          <Text
+            style={[
+              styles.searchBtnTxt,
+              { fontSize: fontSize === 1 ? 14 : fontSize === 2 ? 16 : 18 },
+            ]}
+          >
+            Search
+          </Text>
         </TouchableOpacity>
       </Link>
     </View>
@@ -80,7 +99,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   title: {
-    fontSize: 18,
     fontWeight: '600',
     marginBottom: 10,
   },
@@ -100,8 +118,6 @@ const styles = StyleSheet.create({
   },
   searchBtnTxt: {
     color: '#ffffff',
-    fontSize: 16,
     fontWeight: '600',
   },
 });
-

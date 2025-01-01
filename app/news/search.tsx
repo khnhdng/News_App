@@ -72,7 +72,7 @@ const Page= (props: Props) => {
                 renderItem={({index, item})=>{
                     return <Link href={`/news/${item.article_id}`} asChild key={index}>
                               <TouchableOpacity>
-                                <NewsItem item={item} />
+                                <NewsItem item={item} fontSize={0} />
                             </TouchableOpacity>
                     </Link>
                 }} 

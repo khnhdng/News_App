@@ -50,6 +50,9 @@ const SignupPage = () => {
       await AsyncStorage.setItem("userEmail", email);
       await AsyncStorage.setItem("userPassword", password);
 
+      await AsyncStorage.removeItem("userEmail");
+      await AsyncStorage.removeItem("userPassword");
+
       Alert.alert("Success", "Signup successful! Redirecting to login...");
       router.replace("/login");
     } catch (error) {

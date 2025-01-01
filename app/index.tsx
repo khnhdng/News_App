@@ -30,7 +30,7 @@ const Page = () => {
         <Animated.Text style={styles.description} entering={FadeInRight.delay(700).duration(500)}
         >Get breaking news and personalized updates directly to your feed.</Animated.Text>
         <Animated.View entering={FadeInDown.delay(1200).duration(500)}>
-        <TouchableOpacity style={styles.btn} onPress={() => router.replace("/(tabs)")}> 
+        <TouchableOpacity style={styles.btn} onPress={() => router.replace("/login")}> 
           <Text style={styles.btnText}>Get Started</Text>
         </TouchableOpacity>
         </Animated.View>

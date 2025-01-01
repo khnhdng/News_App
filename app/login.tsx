@@ -16,24 +16,26 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isDialogVisible, setDialogVisible] = useState(false);
-  const [storedPassword, setStoredPassword] = useState(""); // Mật khẩu đã lưu
   const router = useRouter();
 
-  // Lấy mật khẩu đã lưu từ AsyncStorage khi trang login được mở
   useEffect(() => {
-    const getStoredData = async () => {
-      const storedEmail = await AsyncStorage.getItem("userEmail");
-      const storedPassword = await AsyncStorage.getItem("userPassword");
+    const checkFirstTime = async () => {
+      const isFirstTime = await AsyncStorage.getItem("isFirstTime");
 
-      if (storedEmail) {
-        setEmail(storedEmail);
-      }
-      if (storedPassword) {
-        setStoredPassword(storedPassword);  // Lưu mật khẩu đã lưu vào state
+      if (isFirstTime === null) {
+        // Lần đầu vào: không tự động điền
+        await AsyncStorage.setItem("isFirstTime", "false");
+      } else {
+        // Không phải lần đầu: tự động điền email
+        const storedEmail = await AsyncStorage.getItem("userEmail");
+        const storedPassword = await AsyncStorage.getItem("userPassword");
+
+        if (storedEmail) setEmail(storedEmail);
+        if (storedPassword) setPassword(storedPassword);
       }
     };
 
-    getStoredData();
+    checkFirstTime();
   }, []);
 
   const handleLogin = async () => {
@@ -55,21 +57,17 @@ const LoginPage = () => {
     }
   };
 
-  // Hiển thị hộp thoại nhập mật khẩu khi nhấp vào email
-  const handleEmailPress = async () => {
-    if (storedPassword) {
-      setPassword(storedPassword); // Tự động điền mật khẩu nếu đã lưu
-    }
-    setDialogVisible(true);
-  };
 
-  // Đóng hộp thoại và xác nhận mật khẩu
-  const handlePasswordSubmit = () => {
-    setDialogVisible(false);  // Đóng hộp thoại
-    if (storedPassword) {
-      setPassword(storedPassword); // Đặt mật khẩu đã lưu vào ô mật khẩu
-    } else {
-      Alert.alert("Error", "No password stored.");
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem("userEmail");
+      await AsyncStorage.removeItem("userPassword");
+      Alert.alert("Success", "Logged out successfully.");
+      setEmail("");
+      setPassword("");
+    } catch (error) {
+      console.error("Error during logout:", error);
+      Alert.alert("Error", "Something went wrong during logout.");
     }
   };
 
@@ -83,7 +81,7 @@ const LoginPage = () => {
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
-        onFocus={handleEmailPress}  // Khi nhấn vào email, sẽ hiển thị hộp thoại
+       // Khi nhấn vào email, sẽ hiển thị hộp thoại
       />
       <TextInput
         style={styles.input}
@@ -100,20 +98,7 @@ const LoginPage = () => {
       </TouchableOpacity>
 
       {/* Dialog nhập mật khẩu */}
-      <Dialog.Container visible={isDialogVisible}>
-        <Dialog.Title>Enter Password</Dialog.Title>
-        <Dialog.Description>
-          Please enter the password stored for this email.
-        </Dialog.Description>
-        <Dialog.Input
-          placeholder="Password"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-        />
-        <Dialog.Button label="Cancel" onPress={() => setDialogVisible(false)} />
-        <Dialog.Button label="Submit" onPress={handlePasswordSubmit} />
-      </Dialog.Container>
+
     </View>
   );
 };

@@ -8,6 +8,7 @@ import { NewsItem } from '@/components/NewsList';
 import { useIsFocused } from '@react-navigation/native';
 import { NewsDataType } from '@/types';
 import { useTheme } from '@/hooks/ThemeContext'; // Import useTheme để lấy theme
+import { useFontSize } from '@/hooks/FontSizeContext'; // Import useFontSize để lấy fontSize
 
 type Props = {};
 
@@ -16,6 +17,7 @@ const Page = (props: Props) => {
   const [isLoading, setIsLoading] = useState(true);
   const isFocused = useIsFocused();
   const { colors } = useTheme(); // Use the colors from context
+  const { fontSize } = useFontSize(); // Use the fontSize from context
 
   useEffect(() => {
     if (isFocused) fetchBookmark();
@@ -87,13 +89,20 @@ const Page = (props: Props) => {
             renderItem={({ index, item }) => (
               <Link href={`/news/${item.article_id}`} asChild key={index}>
                 <TouchableOpacity style={styles.newsItemWrapper}>
-                  <NewsItem item={item} />
+                  <NewsItem item={item} fontSize={0} />
                 </TouchableOpacity>
               </Link>
             )}
           />
         ) : (
-          <Text style={styles.emptyText}>You have not saved any news.</Text>
+          <Text
+            style={[
+              styles.emptyText,
+              { fontSize: fontSize === 1 ? 14 : fontSize === 2 ? 16 : 18, color: colors.text },
+            ]}
+          >
+            You have not saved any news.
+          </Text>
         )}
       </View>
     </>
@@ -121,7 +130,6 @@ const styles = StyleSheet.create({
   emptyText: {
     textAlign: 'center',
     marginTop: 20,
-    fontSize: 16,
     color: 'gray',
   },
 });

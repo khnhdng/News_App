@@ -1,86 +1,101 @@
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useRef, useState } from 'react'
-import { Colors } from '@/constants/Colors'
-import newsCategoryList from '@/constants/Categories'
+import React, { useState } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import DraggableFlatList, {
+  RenderItemParams,
+} from 'react-native-draggable-flatlist';
+import { Colors } from '@/constants/Colors';
+import newsCategoryList from '@/constants/Categories';
+
+type Category = {
+  id: string;
+  title: string;
+  slug: string;
+};
 
 type Props = {
-    onCategoryChanged: (category: string) => void;
-}
+  onCategoryChanged: (category: string) => void;
+  fontSize: number; // Thêm fontSize vào Props
+};
 
-const Categories = ({onCategoryChanged}: Props) => {
-    const scrollRef = useRef<ScrollView>(null);
-    const itemRef = useRef<TouchableOpacity [] | null []>([]);
-    const [activeIndex, setActiveIndex] = useState(0);
+const Categories = ({ onCategoryChanged, fontSize }: Props) => {
+  const [categories, setCategories] = useState(newsCategoryList);
 
-    const handleSelectCategory = (index: number) => {
-        const selected = itemRef.current[index];
-        setActiveIndex(index );
+  const renderItem = ({ item, drag, isActive }: RenderItemParams<Category>) => (
+    <View
+      style={[
+        styles.item,
+        isActive && styles.itemActive,
+      ]}
+      onTouchStart={drag} // Bắt đầu kéo thả
+    >
+      <Text
+        style={[
+          styles.itemText,
+          { fontSize: fontSize === 1 ? 12 : fontSize === 2 ? 14 : 16 },
+        ]}
+        onPress={() => onCategoryChanged(item.slug)} // Gửi thông tin danh mục
+      >
+        {item.title}
+      </Text>
+    </View>
+  );
 
-        selected?.measure((x) => {
-            scrollRef.current?.scrollTo({x: x-20, y: 0, animated: true});
-        });
-
-
-        onCategoryChanged(newsCategoryList[index].slug);     
-    }
   return (
     <View>
-      <Text style ={styles.title}>Trending Right Now</Text>
-      <ScrollView 
-        ref={scrollRef} 
-        horizontal 
-        showsHorizontalScrollIndicator={false} 
-        contentContainerStyle={styles.itemsWrapper}
+      <Text
+        style={[
+          styles.title,
+          { fontSize: fontSize === 1 ? 16 : fontSize === 2 ? 18 : 20 },
+        ]}
       >
-        {newsCategoryList.map((item, index)=>(
-            <TouchableOpacity 
-                ref={(el) => (itemRef.current[index] = el)} 
-                key={index} 
-                style={[styles.item, activeIndex === index && styles.itemActive]}
-                onPress={() => handleSelectCategory(index)}
-            >
-                <Text style={[styles.itemText, activeIndex === index && styles.itemTextActive]}>{item.title}</Text>
-            </TouchableOpacity>
-        ))}
-      </ScrollView>
+        Trending Right Now
+      </Text>
+      <DraggableFlatList
+        data={categories}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        horizontal
+        onDragEnd={({ data }) => setCategories(data)} // Cập nhật danh sách sau khi kéo thả
+        contentContainerStyle={styles.itemsWrapper}
+      />
     </View>
-  )
-}
+  );
+};
 
-export default Categories
+export default Categories;
 
 const styles = StyleSheet.create({
-    title:{
-        fontSize: 18,
-        fontWeight: "600",
-        color: Colors.black,
-        marginBottom: 10,
-        marginLeft: 20,
-    },
-    itemsWrapper:{
-        gap:20,
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        marginBottom: 10,
-    },
-    item:{
-        borderWidth: 1,
-        borderColor: Colors.darkGrey,
-        paddingVertical: 10,
-        paddingHorizontal: 16,
-        borderRadius: 10,
-    },
-    itemActive:{
-        backgroundColor: Colors.tint,
-        borderColor: Colors.tint, 
-    },
-    itemText: {
-        fontSize: 14,
-        color: Colors.darkGrey,
-        letterSpacing: 0.5
-    },
-    itemTextActive: {
-        fontWeight: '600',
-            color: Colors.white
-    } 
-})
+  title: {
+    fontWeight: '600',
+    color: Colors.black,
+    marginBottom: 10,
+    marginLeft: 20,
+  },
+  itemsWrapper: {
+    flexDirection: 'row',
+    gap: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginBottom: 10,
+  },
+  item: {
+    borderWidth: 1,
+    borderColor: Colors.darkGrey,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    backgroundColor: Colors.white,
+  },
+  itemActive: {
+    backgroundColor: Colors.tint,
+    borderColor: Colors.tint,
+  },
+  itemText: {
+    color: Colors.darkGrey,
+    letterSpacing: 0.5,
+  },
+});
