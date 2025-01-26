@@ -1,4 +1,4 @@
-# Expo News App
+# News_App_IE307
 
 ## Get started
 
